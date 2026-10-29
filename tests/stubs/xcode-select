@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "xcode-select $*" >> "$STUB_LOG"
+[ "${1:-}" = "-p" ] && echo "${STUB_XCODE_PATH:-/Library/Developer/CommandLineTools}"
+exit 0

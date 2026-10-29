@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "mise $* (cwd=$PWD)" >> "$STUB_LOG"
+exit "${STUB_MISE_EXIT:-0}"

@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "xcodebuild $*" >> "$STUB_LOG"
+exit 0

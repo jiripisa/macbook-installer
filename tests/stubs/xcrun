@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "xcrun $*" >> "$STUB_LOG"
+[ "${1:-} ${2:-}" = "simctl list" ] && printf '%s\n' "== Runtimes ==" ${STUB_SIM_RUNTIMES:+"$STUB_SIM_RUNTIMES"}
+exit 0
