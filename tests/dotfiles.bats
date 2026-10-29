@@ -22,6 +22,12 @@ backups_of() {
   [ "$(backups_of "$HOME/.zshrc")" = "0" ]
 }
 
+@test "sync_managed_file reports paths relative to ~" {
+  run sync_managed_file "$SRC" "$HOME/.zshrc"
+  [[ "$output" == *"~/.zshrc"* ]]
+  [[ "$output" != *"$HOME"* ]]
+}
+
 @test "sync_managed_file creates missing parent directories" {
   sync_managed_file "$SRC" "$HOME/.config/ghostty/config"
   [ -f "$HOME/.config/ghostty/config" ]

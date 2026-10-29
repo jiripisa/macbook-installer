@@ -1,6 +1,8 @@
 #!/bin/bash
-# Fake curl: records the URL and prints $STUB_CURL_BODY (a script) for
-# "curl ... | bash" style installers, or the file at $STUB_CURL_FILE for -o downloads.
+# Fake curl: records the call. A *.tar.gz URL gets the file at $STUB_CURL_TARBALL;
+# anything else (an installer piped into bash) gets the script in $STUB_CURL_BODY.
 echo "curl $*" >> "$STUB_LOG"
-if [ -n "${STUB_CURL_FILE:-}" ]; then cat "$STUB_CURL_FILE"; exit 0; fi
-printf '%s\n' "${STUB_CURL_BODY:-true}"
+case "${*: -1}" in
+  *.tar.gz) cat "$STUB_CURL_TARBALL" ;;
+  *) printf '%s\n' "${STUB_CURL_BODY:-true}" ;;
+esac

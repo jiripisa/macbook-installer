@@ -77,14 +77,11 @@ print_summary() {
   print_list "Zbývá udělat ručně:" ${MBI_TODO[@]+"${MBI_TODO[@]}"}
 }
 
-on_error() {
-  printf '\n%s%s✗ Něco se pokazilo v kroku „%s“ (řádek %s).%s\n' \
-    "$C_BOLD" "$C_RED" "${MBI_CURRENT_STEP:-start}" "$1" "$C_RESET" >&2
+# Prints what to do after a failed run; called from the EXIT trap so it also
+# covers failures that never reach an ERR trap (e.g. unbound variables).
+report_failure() {
+  printf '\n%s%s✗ Něco se pokazilo v kroku „%s“.%s\n' \
+    "$C_BOLD" "$C_RED" "${MBI_CURRENT_STEP:-start}" "$C_RESET" >&2
   printf '    Celý průběh je zapsaný v logu: %s\n' "${MBI_LOG:-(log není)}" >&2
   printf '    Zkus skript spustit znovu stejným příkazem. Když to nepomůže, ukaž log tátovi.\n' >&2
-}
-
-install_error_trap() {
-  set -o errtrace
-  trap 'on_error $LINENO' ERR
 }

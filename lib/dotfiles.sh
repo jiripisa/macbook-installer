@@ -3,6 +3,13 @@
 # the repo; the son's own settings live in ~/.zshrc.local, which is never
 # overwritten.
 
+# pretty_path <path> — $HOME shown as ~ (a literal ~ in ${var/…/~} would be
+# tilde-expanded back to $HOME by bash 3.2).
+pretty_path() {
+  local tilde="~"
+  printf '%s\n' "${1/#$HOME/$tilde}"
+}
+
 # sync_managed_file <src> <dest> — copy src to dest; a different existing dest
 # is backed up as <dest>.backup-<YYYYmmdd-HHMMSS> first.
 sync_managed_file() {
@@ -10,14 +17,14 @@ sync_managed_file() {
   mkdir -p "$(dirname "$dest")"
   if [ ! -e "$dest" ]; then
     cp "$src" "$dest"
-    ok "Vytvořeno: ${dest/#$HOME/~}"
+    ok "Vytvořeno: $(pretty_path "$dest")"
   elif cmp -s "$src" "$dest"; then
-    ok "Beze změny: ${dest/#$HOME/~}"
+    ok "Beze změny: $(pretty_path "$dest")"
   else
     backup="$dest.backup-$(date +%Y%m%d-%H%M%S)"
     mv "$dest" "$backup"
     cp "$src" "$dest"
-    warn "Aktualizováno: ${dest/#$HOME/~} (původní verze je v ${backup/#$HOME/~})"
+    warn "Aktualizováno: $(pretty_path "$dest") (původní verze je v $(pretty_path "$backup"))"
   fi
 }
 

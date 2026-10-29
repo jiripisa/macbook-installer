@@ -18,7 +18,7 @@ install_casks() {
     if printf '%s\n' "$managed" | grep -qx "$cask"; then
       continue
     fi
-    info "Instaluju $cask…"
+    info "Instaluju ${cask}…"
     if brew install --cask --adopt "$cask"; then
       ok "$cask nainstalováno"
     else
