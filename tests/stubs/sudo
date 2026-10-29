@@ -1,0 +1,4 @@
+#!/bin/bash
+# Never runs the wrapped command; only records it.
+echo "sudo $*" >> "$STUB_LOG"
+exit "${STUB_SUDO_EXIT:-0}"

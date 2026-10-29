@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "id $*" >> "$STUB_LOG"
+case "${1:-}" in
+  -Gn) echo "${STUB_GROUPS:-staff everyone admin}" ;;
+  *) exec /usr/bin/id "$@" ;;
+esac
