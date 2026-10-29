@@ -1,0 +1,6 @@
+#!/bin/bash
+# Fake curl: records the URL and prints $STUB_CURL_BODY (a script) for
+# "curl ... | bash" style installers, or the file at $STUB_CURL_FILE for -o downloads.
+echo "curl $*" >> "$STUB_LOG"
+if [ -n "${STUB_CURL_FILE:-}" ]; then cat "$STUB_CURL_FILE"; exit 0; fi
+printf '%s\n' "${STUB_CURL_BODY:-true}"

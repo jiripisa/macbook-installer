@@ -1,0 +1,15 @@
+#!/bin/bash
+# Fake Homebrew. State: $STUB_STATE/casks lists installed casks.
+# STUB_ADOPT_FAIL: space separated casks whose --adopt install fails.
+echo "brew $* ${HOMEBREW_BUNDLE_CASK_SKIP:+[CASK_SKIP=$HOMEBREW_BUNDLE_CASK_SKIP]}" >> "$STUB_LOG"
+casks="$STUB_STATE/casks"
+case "$1 ${2:-}" in
+  "shellenv"*) exit 0 ;;
+  "list --cask") [ -f "$casks" ] && cat "$casks"; exit 0 ;;
+  "install --cask")
+    cask="${*: -1}"
+    case " ${STUB_ADOPT_FAIL:-} " in *" $cask "*) exit 1 ;; esac
+    echo "$cask" >> "$casks"
+    ;;
+esac
+exit "${STUB_BREW_EXIT:-0}"
