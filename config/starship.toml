@@ -1,0 +1,237 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](color_teal_dark)\
+$os\
+[](bg:color_teal fg:color_teal_dark)\
+$directory\
+[](fg:color_teal)\
+$custom\
+$c$cpp$rust$golang$nodejs$php$java$kotlin$haskell$python\
+$docker_context$conda$pixi\
+$cmd_duration\
+$line_break$character"""
+
+palette = 'gruvbox_dark'
+
+[palettes.gruvbox_dark]
+color_fg0 = '#fbf1c7'
+color_bg1 = '#3c3836'
+color_bg3 = '#665c54'
+color_blue = '#458588'
+color_aqua = '#689d6a'
+color_green = '#98971a'
+color_purple = '#b16286'
+color_red = '#cc241d'
+color_teal_dark = '#1a5c5c'
+color_teal = '#2a8a8a'
+color_yellow = '#d79921'
+
+[os]
+disabled = false
+style = "bg:color_teal_dark fg:color_fg0"
+
+[os.symbols]
+Macos = "󰀵"
+Linux = "󰌽"
+
+[directory]
+style = "fg:color_fg0 bg:color_teal"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+truncate_to_repo = false
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Development" = "󰲻 "
+
+[git_branch]
+disabled = true
+
+[git_status]
+disabled = true
+
+[custom.git_clean]
+description = "Git branch pill when working tree is clean"
+command = '''
+b=$(git branch --show-current 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+i=""
+if ab=$(git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null); then
+  a=$(echo "$ab" | cut -f1)
+  d=$(echo "$ab" | cut -f2)
+  [ "$a" -gt 0 ] 2>/dev/null && i="$i ⇡$a"
+  [ "$d" -gt 0 ] 2>/dev/null && i="$i ⇣$d"
+fi
+echo "$b$i"
+'''
+when = "git rev-parse --is-inside-work-tree 2>/dev/null && ! git status --porcelain 2>/dev/null | grep -q ."
+shell = ["bash", "--noprofile", "--norc"]
+format = '[](fg:color_aqua)[  $output ](fg:color_fg0 bg:color_aqua)[](fg:color_aqua)'
+
+[custom.git_dirty]
+description = "Git branch pill when working tree has changes"
+command = '''
+b=$(git branch --show-current 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+s=$(git status --porcelain 2>/dev/null)
+i=""
+st=$(printf '%s\n' "$s" | grep -c "^[MADRC]")
+[ "$st" -gt 0 ] && i="$i +$st"
+mo=$(printf '%s\n' "$s" | grep -c "^.[MD]")
+[ "$mo" -gt 0 ] && i="$i !$mo"
+ut=$(printf '%s\n' "$s" | grep -c "^??")
+[ "$ut" -gt 0 ] && i="$i ?$ut"
+if ab=$(git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null); then
+  a=$(echo "$ab" | cut -f1)
+  d=$(echo "$ab" | cut -f2)
+  [ "$a" -gt 0 ] 2>/dev/null && i="$i ⇡$a"
+  [ "$d" -gt 0 ] 2>/dev/null && i="$i ⇣$d"
+fi
+echo "$b$i"
+'''
+when = "git rev-parse --is-inside-work-tree 2>/dev/null && git status --porcelain 2>/dev/null | grep -q ."
+shell = ["bash", "--noprofile", "--norc"]
+format = '[](fg:color_yellow)[  $output ](fg:color_fg0 bg:color_yellow)[](fg:color_yellow)'
+
+[custom.worktree]
+command = "echo ''"
+when = "git rev-parse --git-dir 2>/dev/null | grep -q /worktrees/"
+shell = ["bash", "--noprofile", "--norc"]
+format = '[ 🌿 ](fg:color_aqua)'
+
+[nodejs]
+symbol = ""
+style = "bg:color_blue"
+format = '[](fg:color_blue)[ $symbol( $version) ](fg:color_fg0 bg:color_blue)[](fg:color_blue)'
+
+[c]
+symbol = " "
+style = "bg:color_blue"
+format = '[](fg:color_blue)[ $symbol( $version) ](fg:color_fg0 bg:color_blue)[](fg:color_blue)'
+
+[cpp]
+symbol = " "
+style = "bg:color_blue"
+format = '[](fg:color_blue)[ $symbol( $version) ](fg:color_fg0 bg:color_blue)[](fg:color_blue)'
+
+[rust]
+symbol = ""
+style = "bg:color_blue"
+format = '[](fg:color_blue)[ $symbol( $version) ](fg:color_fg0 bg:color_blue)[](fg:color_blue)'
+
+[golang]
+symbol = ""
+style = "bg:color_blue"
+format = '[](fg:color_blue)[ $symbol( $version) ](fg:color_fg0 bg:color_blue)[](fg:color_blue)'
+
+[php]
+symbol = ""
+style = "bg:color_blue"
+format = '[](fg:color_blue)[ $symbol( $version) ](fg:color_fg0 bg:color_blue)[](fg:color_blue)'
+
+[java]
+symbol = ""
+style = "bg:color_blue"
+format = '[](fg:color_blue)[ $symbol( $version) ](fg:color_fg0 bg:color_blue)[](fg:color_blue)'
+
+[kotlin]
+symbol = ""
+style = "bg:color_blue"
+format = '[](fg:color_blue)[ $symbol( $version) ](fg:color_fg0 bg:color_blue)[](fg:color_blue)'
+
+[haskell]
+symbol = ""
+style = "bg:color_blue"
+format = '[](fg:color_blue)[ $symbol( $version) ](fg:color_fg0 bg:color_blue)[](fg:color_blue)'
+
+[python]
+symbol = ""
+style = "bg:color_blue"
+format = '[](fg:color_blue)[ $symbol( $version)( \($virtualenv\)) ](fg:color_fg0 bg:color_blue)[](fg:color_blue)'
+
+[docker_context]
+symbol = ""
+style = "bg:color_bg3"
+format = '[](fg:color_bg3)[ $symbol( $context) ](fg:#83a598 bg:color_bg3)[](fg:color_bg3)'
+
+[conda]
+style = "bg:color_bg3"
+format = '[](fg:color_bg3)[ $symbol( $environment) ](fg:#83a598 bg:color_bg3)[](fg:color_bg3)'
+
+[pixi]
+style = "bg:color_bg3"
+format = '[](fg:color_bg3)[ $symbol( $version)( $environment) ](fg:color_fg0 bg:color_bg3)[](fg:color_bg3)'
+
+[cmd_duration]
+min_time = 1000
+style = "bg:color_bg1"
+format = '[](fg:color_bg1)[ $duration ](fg:color_fg0 bg:color_bg1)[](fg:color_bg1)'
+
+[time]
+disabled = true
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[](bold fg:color_green)'
+error_symbol = '[](bold fg:color_red)'
+vimcmd_symbol = '[](bold fg:color_green)'
+vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
+vimcmd_replace_symbol = '[](bold fg:color_purple)'
+vimcmd_visual_symbol = '[](bold fg:color_teal)'
+
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[azure]
+disabled = true
+
+[battery]
+disabled = true
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true
+
+[container]
+disabled = true
+
+[vagrant]
+disabled = true
+
+[nix_shell]
+disabled = true
+
+[buf]
+disabled = true
+
+[meson]
+disabled = true
+
+[opa]
+disabled = true
+
+[pulumi]
+disabled = true
+
+[terraform]
+disabled = true
+
+[singularity]
+disabled = true
+
+[spack]
+disabled = true
+
+[vcsh]
+disabled = true

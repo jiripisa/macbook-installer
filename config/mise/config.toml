@@ -1,0 +1,8 @@
+# Tento soubor spravuje macbook-installer a při dalším spuštění ho přepíše.
+[tools]
+java = "temurin-25"
+maven = "latest"
+node = "lts"
+python = "latest"
+go = "latest"
+rust = "latest"

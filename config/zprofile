@@ -1,0 +1,7 @@
+# Tento soubor spravuje macbook-installer a při dalším spuštění ho přepíše.
+# Vlastní nastavení si piš do ~/.zshrc.local.
+
+eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+
+# OrbStack command-line tools (OrbStack would add this line itself on first launch).
+source ~/.orbstack/shell/init.zsh 2>/dev/null || :

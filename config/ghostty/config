@@ -1,0 +1,3 @@
+# Tento soubor spravuje macbook-installer a při dalším spuštění ho přepíše.
+font-family = JetBrainsMono Nerd Font
+window-inherit-working-directory = false

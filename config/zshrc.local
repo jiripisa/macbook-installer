@@ -1,0 +1,6 @@
+# Tvoje vlastní nastavení shellu.
+# Tenhle soubor instalační skript nikdy nepřepíše, takže sem patří tvoje
+# aliasy, proměnné a další úpravy. Změny se projeví v novém okně terminálu.
+#
+# Příklad:
+#   alias ll="ls -la"

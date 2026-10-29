@@ -1,0 +1,36 @@
+# Tento soubor spravuje macbook-installer a při dalším spuštění ho přepíše.
+# Vlastní nastavení si piš do ~/.zshrc.local, ten skript nikdy nepřepíše.
+
+# Claude Code and other user-installed tools
+export PATH="$HOME/.local/bin:$PATH"
+
+# Completions
+autoload -Uz compinit && compinit
+
+# Prompt
+(( $+commands[starship] )) && eval "$(starship init zsh)"
+
+# Language runtimes (Java, Node, Python, Go, Rust) managed by mise
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
+
+# fzf: Ctrl+R searches history, Ctrl+T searches files
+(( $+commands[fzf] )) && eval "$(fzf --zsh)"
+
+# direnv: per-project environment variables from .envrc
+(( $+commands[direnv] )) && eval "$(direnv hook zsh)"
+
+# Up/Down arrows search history for commands starting with what is typed
+autoload -U up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search
+bindkey "^[[B" down-line-or-beginning-search
+
+# Suggestions and syntax highlighting (syntax highlighting must come last)
+for plugin in zsh-autosuggestions zsh-syntax-highlighting; do
+  plugin_file="${HOMEBREW_PREFIX:-/opt/homebrew}/share/$plugin/$plugin.zsh"
+  [[ -r "$plugin_file" ]] && source "$plugin_file"
+done
+unset plugin plugin_file
+
+if [[ -f ~/.zshrc.local ]]; then source ~/.zshrc.local; fi
