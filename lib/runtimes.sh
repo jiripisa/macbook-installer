@@ -1,5 +1,6 @@
 # shellcheck shell=bash
-# Language runtimes from ~/.config/mise/config.toml (written by install_dotfiles).
+# Language runtimes from ~/.config/mise/conf.d/macbook-installer.toml (written
+# by install_dotfiles) plus anything the son added with `mise use -g`.
 
 install_runtimes() {
   info "Instaluju Javu, Maven, Node, Python, Go a Rust. Poprvé to chvíli trvá…"

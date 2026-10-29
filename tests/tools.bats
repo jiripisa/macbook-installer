@@ -12,6 +12,19 @@ setup() {
 
 teardown() { teardown_env; }
 
+make_xcode() {
+  mkdir -p "$MBI_APPS_DIR/Xcode.app/Contents/Developer/usr/bin"
+  printf '#!/bin/sh\n' > "$MBI_APPS_DIR/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
+  chmod +x "$MBI_APPS_DIR/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
+}
+
+@test "setup_xcode treats a half-downloaded Xcode as not ready" {
+  mkdir -p "$MBI_APPS_DIR/Xcode.app/Contents"
+  setup_xcode
+  [[ "${MBI_TODO[*]}" == *"stahuje"* ]]
+  refute_called "sudo"
+}
+
 @test "install_runtimes installs, upgrades and prunes from HOME" {
   install_runtimes
   assert_called "mise install (cwd=$HOME)"
@@ -40,7 +53,7 @@ teardown() { teardown_env; }
 }
 
 @test "setup_xcode selects Xcode, accepts the license and runs first launch" {
-  mkdir -p "$MBI_APPS_DIR/Xcode.app"
+  make_xcode
   setup_xcode
   assert_called "sudo xcode-select -s $MBI_APPS_DIR/Xcode.app/Contents/Developer"
   assert_called "sudo xcodebuild -license accept"
@@ -48,19 +61,19 @@ teardown() { teardown_env; }
 }
 
 @test "setup_xcode does not re-select Xcode when it is already selected" {
-  mkdir -p "$MBI_APPS_DIR/Xcode.app"
+  make_xcode
   STUB_XCODE_PATH="$MBI_APPS_DIR/Xcode.app/Contents/Developer" setup_xcode
   refute_called "sudo xcode-select -s"
 }
 
 @test "setup_xcode downloads the iOS platform when no iOS simulator exists" {
-  mkdir -p "$MBI_APPS_DIR/Xcode.app"
+  make_xcode
   setup_xcode
   assert_called "xcodebuild -downloadPlatform iOS"
 }
 
 @test "setup_xcode skips the iOS download when a simulator runtime exists" {
-  mkdir -p "$MBI_APPS_DIR/Xcode.app"
+  make_xcode
   STUB_SIM_RUNTIMES="iOS 26.0 (26.0 - 23A339) - com.apple.CoreSimulator.SimRuntime.iOS-26-0" setup_xcode
   refute_called "xcodebuild -downloadPlatform"
 }

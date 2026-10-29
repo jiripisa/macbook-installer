@@ -43,6 +43,13 @@ open_tty() {
   exec 7<"$MBI_TTY"
 }
 
+# Throws away keys pressed while the script was busy (e.g. Enter hit during
+# the GitHub login), so they do not silently answer the next question.
+drain_tty() {
+  [ -t 7 ] || return 0
+  while IFS= read -r -t 1 _ <&7; do :; done
+}
+
 # ask <prompt> <default> — prints the answer on stdout. The prompt goes to
 # stderr so callers can capture the answer with $(ask ...). Needs open_tty.
 ask() {

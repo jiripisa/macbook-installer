@@ -12,6 +12,12 @@ setup_xcode() {
     return 0
   fi
   dev="$xcode/Contents/Developer"
+  # The App Store creates Xcode.app while still downloading it.
+  if [ ! -x "$dev/usr/bin/xcodebuild" ]; then
+    warn "Xcode se ještě stahuje nebo jeho instalace není dokončená."
+    note_todo "Xcode se ještě stahuje. Počkej, až ho App Store dokončí, a pak tenhle skript spusť znovu."
+    return 0
+  fi
   if [ "$(xcode-select -p 2>/dev/null)" != "$dev" ]; then
     sudo xcode-select -s "$dev"
   fi

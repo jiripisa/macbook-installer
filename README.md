@@ -71,12 +71,18 @@ všechno, co je zastaralé. Klidně ho spouštěj opakovaně, nic se nerozbije.
 
 ## Vlastní nastavení
 
-Soubory `~/.zshrc`, `~/.zprofile`, `~/.config/starship.toml` a
-`~/.config/ghostty/config` spravuje skript a při dalším spuštění je
-přepíše. Původní verzi vždycky zazálohuje vedle (`….backup-datum-čas`).
+Tyhle soubory spravuje skript a při dalším spuštění je přepíše:
+`~/.zshrc`, `~/.zprofile`, `~/.config/starship.toml`,
+`~/.config/ghostty/config`, `~/.gitignore_global` a
+`~/.config/mise/conf.d/macbook-installer.toml`. Když se od verze ve skriptu
+liší, původní verzi nejdřív zazálohuje vedle (`….backup-datum-čas`).
 
-Vlastní aliasy a nastavení piš do **`~/.zshrc.local`**, ten skript nikdy
-nepřepíše.
+Tvoje vlastní věci patří jinam, tam je skript nikdy nepřepíše:
+
+- aliasy a nastavení shellu do **`~/.zshrc.local`**,
+- jiné verze jazyků přes `mise use -g …` (zapisují se do
+  `~/.config/mise/config.toml`),
+- další nastavení Gitu přes `git config --global …`.
 
 ## Když se něco pokazí
 

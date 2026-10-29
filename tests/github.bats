@@ -100,3 +100,21 @@ teardown() { teardown_env; }
   [ "$(git config --global user.name)" = "Vlastní Jméno" ]
   [ "$(git config --global user.email)" = "vlastni@example.com" ]
 }
+
+@test "gh login and refresh get a terminal so the browser opens" {
+  STUB_GH_NO_KEY_SCOPE=1 setup_github
+  assert_called "gh auth login --hostname github.com --git-protocol ssh --web --skip-ssh-key --scopes admin:public_key [tty]"
+  assert_called "gh auth refresh --hostname github.com --scopes admin:public_key [tty]"
+}
+
+@test "keys typed while waiting are discarded before the git identity questions" {
+  drain_calls=0
+  drain_tty() { drain_calls=$((drain_calls + 1)); }
+  setup_github
+  [ "$drain_calls" -ge 1 ]
+}
+
+@test "the English signing-key warning from gh is not shown" {
+  run setup_github
+  [[ "$output" != *"warning: HTTP 404"* ]]
+}

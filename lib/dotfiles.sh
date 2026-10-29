@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # Managed config files. The installer owns these and keeps them in sync with
-# the repo; the son's own settings live in ~/.zshrc.local, which is never
-# overwritten.
+# the repo; the son's own settings live in ~/.zshrc.local and
+# ~/.config/mise/config.toml, which are never overwritten.
 
 # pretty_path <path> — $HOME shown as ~ (a literal ~ in ${var/…/~} would be
 # tilde-expanded back to $HOME by bash 3.2).
@@ -55,6 +55,7 @@ install_dotfiles() {
   sync_managed_file "$c/starship.toml" "$HOME/.config/starship.toml"
   sync_managed_file "$c/ghostty/config" "$HOME/.config/ghostty/config"
   sync_managed_file "$c/gitignore_global" "$HOME/.gitignore_global"
-  sync_managed_file "$c/mise/config.toml" "$HOME/.config/mise/config.toml"
+  # conf.d keeps ~/.config/mise/config.toml free for the son's own `mise use -g`
+  sync_managed_file "$c/mise/macbook-installer.toml" "$HOME/.config/mise/conf.d/macbook-installer.toml"
   ensure_zshrc_local
 }

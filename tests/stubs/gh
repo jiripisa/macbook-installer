@@ -1,12 +1,13 @@
 #!/bin/bash
 # Fake GitHub CLI. State files in $STUB_STATE: gh_logged_in, gh_key_scope, gh_keys.
-echo "gh $*" >> "$STUB_LOG"
+echo "gh $*${GH_FORCE_TTY:+ [tty]}" >> "$STUB_LOG"
 s="$STUB_STATE"
 case "$1 ${2:-}" in
   "auth status") [ -f "$s/gh_logged_in" ] ;;
   "auth login") touch "$s/gh_logged_in" ;;
   "auth refresh") touch "$s/gh_key_scope" ;;
   "ssh-key list")
+    echo "warning: HTTP 404 (needs the admin:ssh_signing_key scope)" >&2
     if [ -n "${STUB_GH_NO_KEY_SCOPE:-}" ] && [ ! -f "$s/gh_key_scope" ]; then exit 1; fi
     [ -f "$s/gh_keys" ] && cat "$s/gh_keys"
     exit 0

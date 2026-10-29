@@ -38,6 +38,13 @@ teardown() { teardown_env; }
   [ "$b" = "druhá" ]
 }
 
+@test "drain_tty keeps scripted answers from a regular file" {
+  type_answers "Petr"
+  drain_tty
+  run --separate-stderr ask "Jméno" "Jan"
+  [ "$output" = "Petr" ]
+}
+
 @test "print_summary lists items from all three lists" {
   note_installed "git"
   note_skipped "Google Chrome"

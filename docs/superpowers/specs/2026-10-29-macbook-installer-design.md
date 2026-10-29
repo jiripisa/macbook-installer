@@ -133,7 +133,9 @@ Re-running is the update mechanism:
 The script owns some files and must never touch the son's own ones:
 
 - **Managed files** — `.zprofile`, `.zshrc`, `~/.config/starship.toml`,
-  Ghostty config, global gitignore. They are kept in sync with the repo:
+  Ghostty config, global gitignore, and the mise tool list in
+  `~/.config/mise/conf.d/macbook-installer.toml` (so `~/.config/mise/config.toml`
+  stays free for the son's own `mise use -g`). They are kept in sync with the repo:
   if the file on disk differs from the repo version, it is backed up with a
   timestamp suffix and replaced; if identical, nothing happens (no backup
   spam on re-runs).
@@ -165,7 +167,7 @@ The script owns some files and must never touch the son's own ones:
 Flutter was added by the owner after approval ("so he can make iPhone
 apps"). Target is iOS only; Android tooling is out of scope.
 
-### mise (global `~/.config/mise/config.toml`)
+### mise (`~/.config/mise/conf.d/macbook-installer.toml`)
 
 - `java = "temurin-25"`
 - `maven = "latest"`

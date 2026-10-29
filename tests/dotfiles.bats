@@ -77,7 +77,7 @@ backups_of() {
 @test "install_dotfiles puts every managed file in place" {
   install_dotfiles
   for f in .zprofile .zshrc .config/starship.toml .config/ghostty/config \
-           .gitignore_global .config/mise/config.toml .zshrc.local; do
+           .gitignore_global .config/mise/conf.d/macbook-installer.toml .zshrc.local; do
     [ -f "$HOME/$f" ] || { echo "missing $f"; return 1; }
   done
 }
@@ -101,4 +101,11 @@ backups_of() {
   zsh -n "$REPO_ROOT/config/zshrc"
   zsh -n "$REPO_ROOT/config/zprofile"
   zsh -n "$REPO_ROOT/config/zshrc.local"
+}
+
+@test "install_dotfiles leaves the user's own mise config.toml alone" {
+  mkdir -p "$HOME/.config/mise"
+  printf '[tools]\npython = "3.12"\n' > "$HOME/.config/mise/config.toml"
+  install_dotfiles
+  [ "$(cat "$HOME/.config/mise/config.toml")" = "$(printf '[tools]\npython = "3.12"')" ]
 }
