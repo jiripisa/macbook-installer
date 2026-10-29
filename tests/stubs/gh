@@ -1,0 +1,25 @@
+#!/bin/bash
+# Fake GitHub CLI. State files in $STUB_STATE: gh_logged_in, gh_key_scope, gh_keys.
+echo "gh $*" >> "$STUB_LOG"
+s="$STUB_STATE"
+case "$1 ${2:-}" in
+  "auth status") [ -f "$s/gh_logged_in" ] ;;
+  "auth login") touch "$s/gh_logged_in" ;;
+  "auth refresh") touch "$s/gh_key_scope" ;;
+  "ssh-key list")
+    if [ -n "${STUB_GH_NO_KEY_SCOPE:-}" ] && [ ! -f "$s/gh_key_scope" ]; then exit 1; fi
+    [ -f "$s/gh_keys" ] && cat "$s/gh_keys"
+    exit 0
+    ;;
+  "ssh-key add") cat "$3" >> "$s/gh_keys" ;;
+  "api user")
+    case "${4:-}" in
+      .login) echo "${STUB_GH_LOGIN-kid}" ;;
+      .id) echo "${STUB_GH_ID-123}" ;;
+      .name) echo "${STUB_GH_NAME-Petr Novák}" ;;
+      .email) echo "${STUB_GH_EMAIL-petr@example.com}" ;;
+    esac
+    ;;
+  "api meta") printf '%s\n' "ssh-ed25519 AAAAgithubfake1" "ecdsa-sha2-nistp256 AAAAgithubfake2" ;;
+  *) exit 0 ;;
+esac

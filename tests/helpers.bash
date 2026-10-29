@@ -29,6 +29,7 @@ teardown_env() {
 # Lines typed by the "user", one per prompt.
 type_answers() {
   printf '%s\n' "$@" > "$MBI_TTY"
+  open_tty
 }
 
 assert_called() {

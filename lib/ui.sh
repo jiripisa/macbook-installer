@@ -37,8 +37,14 @@ fail() {
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
+# Opens the terminal once on fd 7, so answers are read in order even when
+# ask runs inside $(...) subshells.
+open_tty() {
+  exec 7<"$MBI_TTY"
+}
+
 # ask <prompt> <default> — prints the answer on stdout. The prompt goes to
-# stderr so callers can capture the answer with $(ask ...).
+# stderr so callers can capture the answer with $(ask ...). Needs open_tty.
 ask() {
   local prompt="$1" default="${2:-}" answer=""
   if [ -n "$default" ]; then
@@ -46,7 +52,7 @@ ask() {
   else
     printf '    %s%s:%s ' "$C_BOLD" "$prompt" "$C_RESET" >&2
   fi
-  IFS= read -r answer < "$MBI_TTY" || answer=""
+  IFS= read -r answer <&7 || answer=""
   [ -n "$answer" ] || answer="$default"
   printf '%s\n' "$answer"
 }

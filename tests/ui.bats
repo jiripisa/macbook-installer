@@ -30,6 +30,14 @@ teardown() { teardown_env; }
   [ "$output" = "Jan" ]
 }
 
+@test "consecutive asks read consecutive lines" {
+  type_answers "první" "druhá"
+  a="$(ask "A" "x" 2>/dev/null)"
+  b="$(ask "B" "y" 2>/dev/null)"
+  [ "$a" = "první" ]
+  [ "$b" = "druhá" ]
+}
+
 @test "print_summary lists items from all three lists" {
   note_installed "git"
   note_skipped "Google Chrome"
