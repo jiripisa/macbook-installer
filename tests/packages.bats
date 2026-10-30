@@ -56,10 +56,13 @@ teardown() { teardown_env; }
   [ "$(tail -1 "$STUB_LOG" | cut -d' ' -f1-2)" = "brew upgrade" ]
 }
 
-@test "ensure_homebrew updates an existing Homebrew and installs git and gh" {
+# An existing Homebrew can be too old for the running macOS and without Command
+# Line Tools (no git), so `brew update` alone cannot repair it. The official
+# installer can: it installs the CLT, checks out the latest Homebrew and updates.
+@test "ensure_homebrew re-runs the official installer on an existing Homebrew" {
   ensure_homebrew
-  refute_called "curl"
-  assert_called "brew update"
+  assert_called "curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
+  refute_called "brew update"
   assert_called "brew install git gh"
 }
 

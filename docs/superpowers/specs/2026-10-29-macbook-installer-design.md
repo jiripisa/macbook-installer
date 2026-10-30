@@ -89,7 +89,12 @@ bits, and simplified where his setup would confuse a beginner.
    login will be needed after a few minutes; check admin rights; ask for the
    Mac password (sudo) and keep it alive for the run.
 2. **Base** — Command Line Tools (via the Homebrew installer) and Homebrew.
-   If present, update. Then install `gh` and `git` from Homebrew.
+   The official installer runs even when Homebrew is already present: a Mac
+   can have an old Homebrew that does not recognise the current macOS and no
+   Command Line Tools (so no git), and `brew update` alone cannot recover from
+   that (seen on a real run: macOS 27.2). The installer installs the CLT,
+   checks out the latest Homebrew and updates it. Then install `gh` and `git`
+   from Homebrew.
 3. **GitHub** — `gh auth login` via browser; generate an `ed25519` SSH key
    **without a passphrase** if none exists and upload it to the account if not
    already there; set git protocol to SSH. Git `user.name` / `user.email`

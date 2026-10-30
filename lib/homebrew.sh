@@ -4,15 +4,17 @@
 MBI_BREW_BIN="${MBI_BREW_BIN:-/opt/homebrew/bin/brew}"
 MBI_BREW_INSTALLER="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
+# The official installer also runs on an existing Homebrew: `brew update` alone
+# cannot repair one that lacks the Command Line Tools (no git) or is too old to
+# recognise the running macOS; the installer fixes both and then updates.
 ensure_homebrew() {
   if [ -x "$MBI_BREW_BIN" ]; then
-    info "Homebrew už je nainstalovaný, aktualizuju ho…"
-    "$MBI_BREW_BIN" update
+    info "Homebrew už je nainstalovaný, kontroluju ho a aktualizuju…"
   else
     info "Instaluju Homebrew a Command Line Tools od Applu. Může to trvat 10–20 minut…"
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL "$MBI_BREW_INSTALLER")"
-    [ -x "$MBI_BREW_BIN" ] || fail "Homebrew se nepodařilo nainstalovat. Zkontroluj připojení k internetu a spusť skript znovu."
   fi
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL "$MBI_BREW_INSTALLER")"
+  [ -x "$MBI_BREW_BIN" ] || fail "Homebrew se nepodařilo nainstalovat. Zkontroluj připojení k internetu a spusť skript znovu."
   eval "$("$MBI_BREW_BIN" shellenv)"
   ok "Homebrew je připravený"
   note_installed "Homebrew"

@@ -24,8 +24,8 @@ teardown() { teardown_env; }
 @test "steps run in the agreed order" {
   run /bin/bash "$REPO_ROOT/setup.sh"
   [ "$status" -eq 0 ]
-  order="$(grep -oE '^(sudo -p|brew update|gh auth|brew bundle|mise install|curl -fsSL https://claude)' "$STUB_LOG" | uniq | tr '\n' '|')"
-  [ "$order" = "sudo -p|brew update|gh auth|brew bundle|mise install|curl -fsSL https://claude|" ]
+  order="$(grep -oE '^(sudo -p|curl -fsSL https://raw.githubusercontent.com/Homebrew|gh auth|brew bundle|mise install|curl -fsSL https://claude)' "$STUB_LOG" | uniq | tr '\n' '|')"
+  [ "$order" = "sudo -p|curl -fsSL https://raw.githubusercontent.com/Homebrew|gh auth|brew bundle|mise install|curl -fsSL https://claude|" ]
 }
 
 @test "a second run creates no backups and still succeeds" {
